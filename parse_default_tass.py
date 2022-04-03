@@ -1,7 +1,22 @@
 import json
+import sys
+
 import pandas as pd
 import requests
 import yaml
+
+import argparse
+
+def apply_config():
+    parser = create_parser()
+    agr = parser.parse_args(sys.argv[1:])
+    return read_yaml(agr.config)
+
+def create_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-c', '--config', default='config.yaml')
+
+    return parser
 
 def read_yaml(file_path):
     with open(file_path, "r") as f:
@@ -87,7 +102,7 @@ class Response():
 
 if __name__ == '__main__':
 
-    config = read_yaml('config.yaml')
+    config = apply_config()
 
     response_news = Response(base_url=config['WEB INTERFACE']['BASE_URL'],
                              headers=config['WEB INTERFACE']['HEADERS'])
