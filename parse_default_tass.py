@@ -1,7 +1,11 @@
 import json
 import pandas as pd
 import requests
-import config
+import yaml
+
+def read_yaml(file_path):
+    with open(file_path, "r") as f:
+        return yaml.safe_load(f)
 
 
 class Response():
@@ -83,10 +87,13 @@ class Response():
 
 if __name__ == '__main__':
 
-    response_news = Response(base_url=config.base_url,headers=config.headers)
+    config = read_yaml('config.yaml')
+
+    response_news = Response(base_url=config['WEB INTERFACE']['BASE_URL'],
+                             headers=config['WEB INTERFACE']['HEADERS'])
     data_news = response_news.get_data()
 
-    ready_data = response_news.work_with_datsaframe(data_news,config.fields)
+    ready_data = response_news.work_with_datsaframe(data_news,config['WEB INTERFACE']['FIELDS'])
 
     # response_news.print_results(ready_data)
 
