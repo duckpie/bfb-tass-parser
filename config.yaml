@@ -1,0 +1,37 @@
+WEB INTERFACE:
+
+  BASE_URL: https://tass.ru/userApi/getNewsFeed
+
+  FIELDS:
+  - id
+  - title
+  - image
+  - link
+
+  HEADERS:
+#    Host: <calculated when request is sent>
+    Connection: keep-alive
+    Content-Type: application/json;charset=UTF-8
+    accept-language: ru,en-US;q=0.9,en;q=0.8
+    accept: application/json, text/plain, */*
+    user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko)
+      Chrome/99.0.4844.84 Safari/537.36 OPR/85.0.4341.47
+#    Cookie: __js_p_=640,1800,0,0; tass_uuid=E5F651CA-7C98-454F-8B66-D857A1330050
+    cookie: top100_id=t1.2706484.830035645.1648910914396; last_visit=1648910863852::1648921663852;
+      t1_sid_2706484=s1.2115049998.1648921663848.1648921666509.2.5.10; SLG_G_WPT_TO=ru; SLG_GWPT_Show_Hide_tmp=1;
+      SLG_wptGlobTipTmp=1; __lhash_=02c65abce273291181765a9f84ff06df; _ym_uid=1648910914415645649; _ym_d=1648910914;
+      adtech_uid=0fcd9855-7dac-43af-86fe-21a2dbc5c2e6%3Atass.ru; user-id_1.0.5_lr_lruid=pQ8AAEJiSGK0kXV7ARSlFQA%3D; 
+      top100_id=t1.2706484.1252604500.1648910920335; chash=RtQaucY9Yo; _ga=GA1.2.621404409.1648920693; 
+      tass_uuid=D8E63742-92D7-4E2F-BB7C-CD454F9396BD; __js_p_=196,1800,0,0; __jhash_=959; 
+      __jua_=Mozilla%2F5.0%20%28X11%3B%20Linux%20x86_64%29%20AppleWebKit%2F537.36%20%28KHTML%2C%20like%20Gecko%29%20Chrome%2F99.0.4844.84%20Safari%2F537.36%20OPR%2F85.0.4341.47; 
+      __hash_=0ffb3ba9d0fc998467d4fcc79597ca4e; last_visit=1649001398578::1649012198578; _ym_visorc=b; _ym_isad=2; 
+      t1_sid_2706484=s1.61778038.1649012198573.1649012208601.5.5.81; newsListCounter=0
+
+  PARAMS:
+    limit: 10
+    timestamp: 1649012200
+
+DATA_FILE: tass_titles.csv
+
+
+
