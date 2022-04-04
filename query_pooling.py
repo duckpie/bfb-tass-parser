@@ -5,6 +5,7 @@ import time
 import pandas as pd
 import parse_default_tass
 import yaml
+from csv import writer
 
 
 def apply_config():
@@ -15,7 +16,7 @@ def apply_config():
 
 def create_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--config', default='old_config.yaml')
+    parser.add_argument('-c', '--config', default='config.yaml')
 
     return parser
 
@@ -31,16 +32,22 @@ def read_old_data(old_data: str):
 
 # пока что id не получаем
 def get_last_id():
-    return 14269307
+    return 14278157
 
 
 def get_index_first_new_article(data, last_id):
-    return data.loc[data['id'] == last_id].index[0]
+    try:
+        return data.loc[data['id'] == last_id].index[0]
+    except:
+        return None
 
 
 def get_new_data(data, last_id):
     index = get_index_first_new_article(data, last_id)
-    new_articles = data.iloc[:index]
+    try:
+        new_articles = data.iloc[:index]
+    except:
+        new_articles = data
 
     return new_articles
 
@@ -50,10 +57,12 @@ def get_new_data(data, last_id):
 
 # исправить индексацию
 def save_new_data(new_articles, path):
-    data = read_old_data(path)
-    all_data = pd.concat([data, new_articles], ignore_index=True)
-    # all_data = data.append(new_articles)
-    all_data.to_csv(path, encoding='utf-8')
+    for line in range(len(new_articles.index)-1,-1,-1):
+        one_new_article = new_articles.iloc[line,].tolist()
+
+        with open(path, 'a', newline='') as f_object:
+            writer_object = writer(f_object)
+            writer_object.writerow(one_new_article)
 
 
 if __name__ == '__main__':

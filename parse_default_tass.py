@@ -5,6 +5,7 @@ import time
 import pandas as pd
 import requests
 import yaml
+import json
 
 import argparse
 
@@ -46,10 +47,12 @@ class Response():
             'https': 'http://10.10.1.10:1080',
         }
 
-        # print(self.params)
+        data = json.dumps(self.params)
+
         response = requests.post(self.base_url,
                                  headers=self.headers,
-                                 # data=self.params,
+                                 data=data,
+                                 timeout=3,
                                  # proxies=proxies
                                  )
         return response
@@ -102,7 +105,9 @@ class Response():
         return data[fields]
 
     def save_data(self, important_data, path):
-        important_data.to_csv(path, encoding='utf-8')
+        reverse_important_data = important_data[::-1]
+        reverse_important_data.set_index('id', inplace=True)
+        reverse_important_data.to_csv(path, encoding='utf-8')
         print('File saved successfully!')
 
     def print_results(self, important_data):
