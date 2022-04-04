@@ -6,17 +6,30 @@ import pandas as pd
 import parse_default_tass
 import yaml
 from csv import writer
+import redis
+
+
+def connect_redis():
+    return redis.Redis()
+
+def activate_parser():
+    parser = create_parser()
+    agr = parser.parse_args(sys.argv[1:])
+    return agr
 
 
 def apply_config():
-    parser = create_parser()
-    agr = parser.parse_args(sys.argv[1:])
+    agr = activate_parser()
     return read_yaml(agr.config)
 
+def apply_time():
+    agr = activate_parser()
+    return int(agr.time)
 
 def create_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--config', default='config.yaml')
+    parser.add_argument('-t', '--time', default=600)
 
     return parser
 
@@ -30,9 +43,24 @@ def read_old_data(old_data: str):
     return pd.read_csv(old_data)
 
 
-# пока что id не получаем
-def get_last_id():
-    return 14278157
+def get_index_last_data(data):
+    try:
+        return int(data.iloc[0]['id'])
+    except:
+        return None
+
+
+def set_last_id(db, data):
+    last_id = get_index_last_data(data)
+    print(f'Last id is {last_id}')
+    db.set(last_id, last_id)
+
+
+def get_last_id(db):
+    try:
+        return int(db.get('id').decode("utf-8"))
+    except:
+        return 14279053
 
 
 def get_index_first_new_article(data, last_id):
@@ -52,12 +80,8 @@ def get_new_data(data, last_id):
     return new_articles
 
 
-# перезаписываем файл полностью, так как при попытке дописать новые
-# строки в старый файл происходит путаница в порядке строк
-
-# исправить индексацию
 def save_new_data(new_articles, path):
-    for line in range(len(new_articles.index)-1,-1,-1):
+    for line in range(len(new_articles.index) - 1, -1, -1):
         one_new_article = new_articles.iloc[line,].tolist()
 
         with open(path, 'a', newline='') as f_object:
@@ -67,6 +91,8 @@ def save_new_data(new_articles, path):
 
 if __name__ == '__main__':
     config = apply_config()
+    db = connect_redis()
+
 
     while True:
         response_news = parse_default_tass.Response(base_url=config['WEB INTERFACE']['BASE_URL'],
@@ -77,12 +103,13 @@ if __name__ == '__main__':
         ready_data = response_news.work_with_datsaframe(data_news, config['WEB INTERFACE']['FIELDS'])
 
         path_old_data = config['DATA_FILE']
-        last_id = get_last_id()
+        last_id = get_last_id(db)
         new_articles = get_new_data(ready_data, last_id)
-        print('NEW ARTICLE')
-        print(new_articles[['id', 'title']])
+        # print('NEW ARTICLE')
+        # print(new_articles[['id', 'title']])
 
         save_new_data(new_articles, path_old_data)
-        # response_news.print_results(ready_data)
 
-        time.sleep(10)
+        set_last_id(db, ready_data)
+
+        time.sleep(apply_time())
