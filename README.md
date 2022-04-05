@@ -5,13 +5,6 @@ python parse_default_tass.py -c config.yaml
 ```
 ### Запуск парсера: 
 
-Редис сервер пока что запускаем вручную: 
-
-```
-redis-server
-```
-Запускаем сам код: 
-
 ```
  python query_pooling.py -c config.yaml -t 600
 ```

@@ -1,3 +1,2 @@
 __pycache__
-old_config.yaml
-config.yaml
+config/old_config.local.yaml
