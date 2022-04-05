@@ -3,7 +3,7 @@ import sys
 import time
 
 import pandas as pd
-import parse_default_tass
+from scr.parser import parse_default_tass
 import yaml
 from csv import writer
 import redis
@@ -28,7 +28,7 @@ def apply_time():
 
 def create_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--config', default='config.yaml')
+    parser.add_argument('-c', '--config', default='config.local.yaml')
     parser.add_argument('-t', '--time', default=600)
 
     return parser

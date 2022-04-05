@@ -18,7 +18,7 @@ def apply_config():
 
 def create_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--config', default='config.yaml')
+    parser.add_argument('-c', '--config', default='config.local.yaml')
 
     return parser
 
