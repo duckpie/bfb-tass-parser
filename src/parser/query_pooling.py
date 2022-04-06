@@ -3,7 +3,7 @@ import sys
 import time
 
 import pandas as pd
-from scr.parser import parse_default_tass
+from src.parser import parse_default_tass
 import yaml
 from csv import writer
 import redis
