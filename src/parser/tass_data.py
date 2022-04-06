@@ -8,12 +8,13 @@ from requests import Response
 
 
 class TassData():
-    def __init__(self, base_url: str, headers: dict, params: dict, fields: list, proxies: str = None, ) -> None:
+    def __init__(self, base_url: str, headers: dict, params: dict, fields: list, redis, proxies: str = None, ) -> None:
         self._base_url = base_url
         self._headers = headers
         self._params = params
         self._fields = fields
         self._proxies = proxies
+        self._redis = redis
 
     def get_articles(self) -> pd.DataFrame:
         response = self.make_requests()
@@ -74,9 +75,19 @@ class TassData():
     def _leave_required_fields_only(self, data: pd.DataFrame) -> pd.DataFrame:
         return data[self._fields]
 
-    # нет метода сохранения
-    def save_articles(self) -> bool:
-        pass
+
+    def save_articles(self,data:pd.DataFrame) -> bool:
+        try:
+
+            for i in range(len(data.index)):
+                id = int(data.iloc[i]['id'])
+                data_to_save = dict(zip(self._fields[1:],data.iloc[i,1:].tolist()))
+
+
+                self._redis.set(id, json.dumps(data_to_save))
+            return True
+        except:
+            return False
 
     def get_url(self) -> str:
         return self._base_url
