@@ -1,14 +1,15 @@
 import redis
 
-from src.config import Config, ParserConfig, ServerConfig, RedisConfig
+from src.config import Config, ParserConfig, ServerConfig, RedisConfig,ServicersConfig
 from src.parser.tass_data import TassData
 
 
 
 if __name__ == '__main__':
-
+    # конфиг читается за 1 раз
 
     redis_conf = RedisConfig('local')
+
     r = redis.Redis(
         host=redis_conf.host,
         port=redis_conf.port,
